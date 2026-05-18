@@ -19,6 +19,7 @@ class UrbanRoutesPage:
     CARD_CVV_LOCATOR = (By.CSS_SELECTOR, "input.card-input[name='code']")
     LINK_BUTTON_LOCATOR = (By.XPATH, "//button[contains(text(),'Link')]")
     PAYMENT_TEXT_LOCATOR = (By.XPATH, "//div[text()='Card']")
+    COMMENT_INPUT_LOCATOR = (By.ID, "comment")
 
 
 
@@ -100,3 +101,6 @@ class UrbanRoutesPage:
 
     def get_payment_method_text(self):
         return self.driver.find_element(*self.PAYMENT_TEXT_LOCATOR).text
+
+    def click_comment_field(self):
+        self.driver.find_element(*self.COMMENT_INPUT_LOCATOR).click()
