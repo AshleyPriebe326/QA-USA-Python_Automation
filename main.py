@@ -82,6 +82,10 @@ class TestUrbanRoutes:
         self.driver.get(data.URBAN_ROUTES_URL)
         urban_routes_page = UrbanRoutesPage(self.driver)
         urban_routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        urban_routes_page.click_supportive_button()
+        urban_routes_page.enter_comment(data.MESSAGE_FOR_DRIVER)
+        assert (urban_routes_page.get_comment_value()
+                == data.MESSAGE_FOR_DRIVER)
 
     def test_order_blanket_and_handkerchiefs(self):
         self.driver.get(data.URBAN_ROUTES_URL)

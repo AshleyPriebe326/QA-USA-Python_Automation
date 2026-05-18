@@ -104,3 +104,11 @@ class UrbanRoutesPage:
 
     def click_comment_field(self):
         self.driver.find_element(*self.COMMENT_INPUT_LOCATOR).click()
+
+    def enter_comment(self, comment):
+        self.driver.find_element(*self.COMMENT_INPUT_LOCATOR).send_keys(comment)
+
+    def get_comment_value(self):
+        return self.driver.find_element(
+            *self.COMMENT_INPUT_LOCATOR
+        ).get_attribute("value")
