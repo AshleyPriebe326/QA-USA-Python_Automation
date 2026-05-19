@@ -2,8 +2,9 @@ import data
 import helpers
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
+
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages import UrbanRoutesPage
 
@@ -91,16 +92,47 @@ class TestUrbanRoutes:
         self.driver.get(data.URBAN_ROUTES_URL)
         urban_routes_page = UrbanRoutesPage(self.driver)
         urban_routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        urban_routes_page.click_supportive_button()
+        urban_routes_page.add_blanket_and_handkerchiefs()
+        assert urban_routes_page.is_blanket_and_handkerchiefs_selected()
 
     def test_order_2_ice_creams(self):
         self.driver.get(data.URBAN_ROUTES_URL)
         urban_routes_page = UrbanRoutesPage(self.driver)
         urban_routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        urban_routes_page.click_supportive_button()
+        urban_routes_page.add_ice_cream(2)
+        assert urban_routes_page.get_ice_cream_count() == "2"
 
-    def test_car_search_model_appears(self):
+    def test_car_search_modal_appears(self):
         self.driver.get(data.URBAN_ROUTES_URL)
-        urban_routes_page = UrbanRoutesPage(self.driver)
-        urban_routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+
+        page = UrbanRoutesPage(self.driver)
+
+        # Step 1: route
+        page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+
+        # Step 2: supportive tariff
+        page.click_supportive_button()
+
+        # Step 3: phone (reuse your flow)
+        page.click_phone_field()
+        page.enter_phone_number(data.PHONE_NUMBER)
+        page.click_next()
+
+        from helpers import retrieve_phone_code
+        code = retrieve_phone_code(self.driver)
+        page.enter_sms_code(code)
+        page.click_confirm()
+
+        # Step 4: comment
+        page.enter_comment(data.MESSAGE_FOR_DRIVER)
+
+        # Step 5: order taxi
+        page.click_order_button()
+
+        # Step 6: assert modal appears
+        assert page.is_car_search_modal_visible()
 
     @classmethod
     def teardown_class(cls):

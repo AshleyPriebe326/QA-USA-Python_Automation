@@ -20,9 +20,24 @@ class UrbanRoutesPage:
     LINK_BUTTON_LOCATOR = (By.XPATH, "//button[contains(text(),'Link')]")
     PAYMENT_TEXT_LOCATOR = (By.XPATH, "//div[text()='Card']")
     COMMENT_INPUT_LOCATOR = (By.ID, "comment")
+    ORDER_REQUIREMENTS_ARROW_LOCATOR = (
+        By.XPATH,
+        "//div[text()='Requirements']/following-sibling::div//img[@alt='Arrow']"
+    )
 
+    BLANKET_CHECKBOX_LOCATOR = (By.XPATH, "//input[@class='switch-input']")
 
+    BLANKET_SLIDER_LOCATOR = (By.XPATH, "//div[@class='switch']")
 
+    ICE_CREAM_LABEL_LOCATOR = (By.XPATH, "//div[text()='Ice cream']")
+    ICE_CREAM_PLUS_LOCATOR = (By.XPATH, "//div[text()='Ice cream']"
+        "/ancestor::div[contains(@class,'r-counter')]"
+        "//div[contains(@class,'counter-plus')]")
+    ICE_CREAM_COUNTER_LOCATOR = (By.XPATH, "//div[text()='Ice cream']"
+        "/ancestor::div[contains(@class,'r-counter')]"
+        "//div[contains(@class,'counter-value')]")
+    ORDER_BUTTON_LOCATOR = (By.XPATH, "//button[contains(@class,'smart-button')]")
+    CAR_SEARCH_MODAL_LOCATOR = (By.XPATH, "//div[contains(@class,'order-body')]")
 
 
 
@@ -112,3 +127,52 @@ class UrbanRoutesPage:
         return self.driver.find_element(
             *self.COMMENT_INPUT_LOCATOR
         ).get_attribute("value")
+
+    def add_blanket_and_handkerchiefs(self):
+
+        # Then find and click slider
+        slider = WebDriverWait(self.driver, 5).until(
+            expected_conditions.element_to_be_clickable(self.BLANKET_SLIDER_LOCATOR)
+        )
+        slider.click()
+
+    def is_blanket_and_handkerchiefs_selected(self):
+        return self.driver.find_element(
+            *self.BLANKET_CHECKBOX_LOCATOR
+        ).get_property("checked")
+
+    def open_order_requirements(self):
+        WebDriverWait(self.driver, 5).until(
+            expected_conditions.element_to_be_clickable(
+                self.ORDER_REQUIREMENTS_ARROW_LOCATOR
+            )
+        ).click()
+
+    def add_ice_cream(self, times):
+        plus_button = WebDriverWait(self.driver, 5).until(
+            expected_conditions.element_to_be_clickable(
+                self.ICE_CREAM_PLUS_LOCATOR
+            )
+        )
+
+        for _ in range(times):
+            plus_button.click()
+
+    def get_ice_cream_count(self):
+        return self.driver.find_element(
+            *self.ICE_CREAM_COUNTER_LOCATOR
+        ).text
+
+    def click_order_button(self):
+        WebDriverWait(self.driver, 5).until(
+            expected_conditions.element_to_be_clickable(
+                self.ORDER_BUTTON_LOCATOR
+            )
+        ).click()
+
+    def is_car_search_modal_visible(self):
+        return WebDriverWait(self.driver, 5).until(
+            expected_conditions.visibility_of_element_located(
+                self.CAR_SEARCH_MODAL_LOCATOR
+            )
+        ).is_displayed()
